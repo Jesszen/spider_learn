@@ -4,6 +4,7 @@ from  lxml import etree
 import re
 from .utils import get_page
 from random import choice
+from pyquery import PyQuery as pq
 
 from .logger_proxy import mylogger
 logger=mylogger.get_logger('crawler')
@@ -13,7 +14,7 @@ class proxy_mataclass(type):
     """
     定义元类
     """
-    def __new__(cls, attrs,name,bases):
+    def __new__(cls, name,bases,attrs):
         count=0
         attrs['__crawlfunc__']=[]
         for k,v in attrs.items():
@@ -21,7 +22,7 @@ class proxy_mataclass(type):
                 attrs['__crawlfunc__'].append(k)
                 count +=1
         attrs['__crawlcount__']=count
-        return type.__new__(cls,attrs,name,bases)
+        return type.__new__(cls,name,bases,attrs)
 
 class crawler(object,metaclass=proxy_mataclass):
     """
@@ -37,17 +38,18 @@ class crawler(object,metaclass=proxy_mataclass):
             proxies.append(proxy)
         return proxies
 
-    def crawl_daili666(self,page):
-        page=list(range(1,1200))
+
+    def crawl_daili666(self,page_count=800):
+
         url='http://www.66ip.cn/{}.html'
-        urls=url.format(choice(page))
+        urls=[url.format(page) for page in range(page_count)]
         for u in urls:
             logger.info('begain crawl %s'%u)
             html=get_page(u)
             if html:
                 doc=etree.HTML(html)#解析网页地址
-                ip=doc.xpath('//div[@align="center"]//table//tr[option >1]//td[1]/text()')
-                prot=doc.xpath('//div[@align="center"]//table//tr[option >1]//td[2]/text()')
+                ip=doc.xpath('//div[@align="center"]//table//tr[position()>1]//td[1]/text()')
+                prot=doc.xpath('//div[@align="center"]//table//tr[position()>1]//td[2]/text()')
                 ip_address=list(zip(ip,prot))#元组列表
                 for ip,port in ip_address:
                     yield  ':'.join([ip,port])#join的对象只能数字符型，此外join只接受一个参数，可以是列表，元组，字典，所以此处要用【】列表

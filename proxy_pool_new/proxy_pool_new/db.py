@@ -8,7 +8,7 @@ from .logger_proxy import mylogger
 logger=mylogger.get_logger(name='db')
 
 class RedisClient(object):
-    def __init__(self,host=REDIS_HOST,port=REDIS_PORT,password=REDIS_PASSWORD):
+    def __init__(self, host=REDIS_HOST, port=REDIS_PORT, password=REDIS_PASSWORD):
         """
         初始化
         :param host: redis 地址
@@ -17,7 +17,7 @@ class RedisClient(object):
         decode_responses=True,写入的键值对中的value为str类型，不加这个参数写入的则为字节类型。
         例子：不加，结果前多一个b，    b'hello world'
         """
-        self.db = redis.StrictRedis(host= host,port=port,password=password,decode_responses=True)
+        self.db = redis.StrictRedis(host= host, port=port, password=password, decode_responses=True)
 
     def add(self,proxy,score=INITIAL_SCORE):#score  已经又默认值，如果不特别指定
         """
@@ -26,10 +26,11 @@ class RedisClient(object):
         :param intial_socore: 初始评分值
         :return:
         """
-        if not re.match(r'\d+\.\d*\.\d*\:\d*',proxy):
+        if not re.match('\d+\.\d*\.\d*\.\d+\:\d*',proxy):
             logger.info('不符合规范 %s' % proxy)
             return
         if not self.db.zscore(REDIS_KEY,proxy):
+            logger.info('代理添加到数据库')
             #语法 zscore(key,member),key为有序集合名，member为有序集合的键名，返回值为member对应的值，若不存在，返回nil
             return self.db.zadd(REDIS_KEY,score,proxy)#语法zadd(key,score,member),key有序集合名，scrore默认分值，proxy为member值
 

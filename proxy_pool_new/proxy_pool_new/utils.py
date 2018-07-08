@@ -9,21 +9,22 @@ from .logger_proxy import mylogger
 
 logger=mylogger.get_logger("utils")
 
-def get_page(url,option={}):
-    try:
-        agent=UserAgent()
-    except FakeUserAgentError as f:
-        logger.exception(f)
+try:
+    agent = UserAgent()
+except FakeUserAgentError as f:
+    logger.exception(f)
 
+
+def get_page(url,option={}):
     base_headers={
         'User_Agent':agent.random,
-        'Accept-Encoding': 'gzip, deflate, sdch',
-        'Accept-Language': 'en-US,en;q=0.9,zh-CN;q=0.8,zh;q=0.7'
+        'accept-encoding':'gzip, deflate, sdch',
+        'accept-language': 'zh-CN,zh;q=0.8'
           }
-    header=dict(base_headers,**option)
+    headers=dict(base_headers,**option)
     logger.info('抓取代理 %s'% url)
     try:
-        r=requests.get(url,header=header)
+        r=requests.get(url,headers=headers)
         logger.info('抓取成功 %s %d'%(url,r.status_code))
         if r.status_code ==200:
             return r.text

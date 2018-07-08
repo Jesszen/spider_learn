@@ -11,7 +11,7 @@ try:
 except:
     from aiohttp import ClientProxyConnectionError as ProxyConnectionError
 
-class test(object):
+class tester(object):
     def __init__(self):
         self.redis=RedisClient()
 
@@ -25,8 +25,8 @@ class test(object):
                        proxy=proxy.decode('utf-8')#将bytes对象解码成字符串，默认使用utf-8进行解码。防止数据库提取的proxy是bytes格式。
                    real_proxy = 'http://' + proxy
                    logger.info('正在测试代理')
-                   async with session.get(Test_url,real_proxy,timeout=15) as response:
-                       if response.status == 200:
+                   async with session.get(Test_url,proxy=real_proxy,timeout=15,allow_redirects=False) as response:
+                       if response.status in VALID_STATUS_CODES:
                            self.redis.max(proxy)# 将可用代理分值设为100
                            logger.info('proxy is enable %s' %proxy)
                        else:
@@ -48,7 +48,7 @@ class test(object):
                 start = i
                 stop=min(i+Batch_test_size,count)
                 logger.info('正在检测第 %s 到%s之间的代理'%(start + 1,stop))
-                test_proxies = self.redis.batch(start=start,stop=stop -1)
+                test_proxies = self.redis.batch(start=start,stop=stop)
                 loop = asyncio.get_event_loop()#asyncio实现并发，就需要多个协程组成列表来完成任务【创建多个协程的列表，然后将这些协程注册到事件循环中】，
                                                # 每当有任务阻塞的时候就await，然后其他协程继续工作，所以下面是协程列表；
                                                # 所谓的并发：多个任务需要同时进行；
