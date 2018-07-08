@@ -20,5 +20,11 @@ INITIAL_SCORE = 10
 #代理池数量上限
 POOL_UPPER_THRESHOLD = 5000
 
+#测试url，测试代理是否可用
+Test_url='http://baidu.com'
+
+#最大批次测似数量
+Batch_test_size = 100
+
 
 
