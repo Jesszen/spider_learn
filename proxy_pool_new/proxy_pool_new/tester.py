@@ -14,10 +14,8 @@ except:
 class tester(object):
     def __init__(self):
         self.redis=RedisClient()
-
-
     async def test_single_proxy(self,proxy):
-        conn = aiohttp.TCPConnector(verify_ssl=False)  #
+        conn = aiohttp.TCPConnector(verify_ssl=False)  #下一句with  as  session:前后文管理器,with结束，session会话结束
         async with aiohttp.ClientSession(connector=conn) as session:#aiohttp则是基于asyncio实现的HTTP框架;这里要引入一个类，aiohttp.ClientSession.
                                                                       # 首先要建立一个session对象，然后用该session对象去打开网页
                try:

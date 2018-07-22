@@ -2,7 +2,6 @@ from flask import Flask,g
 from .db import RedisClient
 
 __all__ =['app']
-
 app = Flask(__name__)
 
 def get_conn():

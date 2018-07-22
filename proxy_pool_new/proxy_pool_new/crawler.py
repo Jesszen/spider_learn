@@ -38,9 +38,7 @@ class crawler(object,metaclass=proxy_mataclass):
             proxies.append(proxy)
         return proxies
 
-
     def crawl_daili666(self,page_count=800):
-
         url='http://www.66ip.cn/{}.html'
         urls=[url.format(page) for page in range(page_count)]
         for u in urls:
@@ -55,9 +53,25 @@ class crawler(object,metaclass=proxy_mataclass):
                     yield  ':'.join([ip,port])#join的对象只能数字符型，此外join只接受一个参数，可以是列表，元组，字典，所以此处要用【】列表
 
 
+    def crawl_ip181(self):
+        start_url = 'http://www.ip181.com/'
+        html = get_page(start_url)
+        ip_address = re.compile('<tr.*?>\s*<td>(.*?)</td>\s*<td>(.*?)</td>')
+        # \s* 匹配空格，起到换行作用
+        re_ip_address = ip_address.findall(html)
+        for address,port in re_ip_address:
+            result = address + ':' + port
+            yield result.replace(' ', '')
 
 
-
-
-
+    def crawl_ip3366(self):
+        for page in range(1, 4):
+            start_url = 'http://www.ip3366.net/free/?stype=1&page={}'.format(page)
+            html = get_page(start_url)
+            ip_address = re.compile('<tr>\s*<td>(.*?)</td>\s*<td>(.*?)</td>')
+            # \s * 匹配空格，起到换行作用
+            re_ip_address = ip_address.findall(html)
+            for address, port in re_ip_address:
+                result = address+':'+ port
+                yield result.replace(' ', '')
 

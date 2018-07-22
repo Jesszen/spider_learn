@@ -21,7 +21,7 @@ INITIAL_SCORE = 10
 POOL_UPPER_THRESHOLD = 1000
 
 #测试url，测试代理是否可用
-Test_url='http://www.baidu.com'
+Test_url='http://mp.weixin.qq.com/'
 
 
 #最大批次测似数量
@@ -35,7 +35,7 @@ Getter_cycle = 20
 
 #开关
 Tester_enabled = True
-Getter_enabled = True
+Getter_enabled = False
 Api_enabled = True
 
 #api配置
